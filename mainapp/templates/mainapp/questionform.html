@@ -1,0 +1,44 @@
+{% extends 'mainapp/base.html' %}
+{% block title %}Posez votre question{% endblock %}
+{% block content %}
+{% load static %}
+<!-- Page Content -->
+<div class="container">
+
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">Posez votre question</h1>
+
+  <!-- Content Row -->
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <form name="sentMessage" id="contactForm" novalidate>
+        {% csrf_token %}
+        <div class="control-group form-group">
+          <div class="controls">
+            <label>Nom réel / Pseudonyme:</label>
+            <input type="text" class="form-control" id="name" maxlength="40" required data-validation-required-message="Merci de renseigner un nom">
+            <p class="help-block"></p>
+          </div>
+        </div>
+        <div class="control-group form-group">
+        </div>
+        <div class="control-group form-group">
+          <div class="controls">
+            <label>Question:</label>
+            <textarea rows="2" cols="100" class="form-control" id="question" required data-validation-required-message="Merci de renseigner une question" maxlength="255" style="resize:none"></textarea>
+          </div>
+        </div>
+        <div id="success"></div>
+        <!-- For success/fail messages -->
+        <button type="submit" class="btn btn-primary" id="sendMessageButton">Envoyer ma question</button>
+      </form>
+    </div>
+
+  </div>
+  <!-- /.row -->
+</div>
+{% endblock content %}
+{% block script %}
+    <script src="{% static 'mainapp/js/jqBootstrapValidation.js' %}"></script>
+    <script src="{% static 'mainapp/js/questionform.js' %}"></script>
+{% endblock %}

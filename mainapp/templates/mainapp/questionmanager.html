@@ -1,0 +1,47 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}Gestionnaire de la FAQ{% endblock %}
+{% block content %}
+
+<!-- Page Content -->
+<div class="container">
+
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">Gestionnaire de la FAQ</h1>
+
+  <div class="mb-4" id="accordion" role="tablist" aria-multiselectable="true">
+    {% csrf_token %}
+    {% if not questions %}
+    <p>Aucune question n'a été posé pour le moment.</p>
+    {% endif %}
+    {% for question in questions %}
+    <div class="card">
+      <div class="card-header {{ question.answer|yesno:',bg-warning' }}" role="tab" id="heading-{{question.id}}">
+        <h5 class="mb-0">
+          <a class="collapsed align-middle" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{question.id}}" aria-expanded="true" aria-controls="collapse-{{question.id}}">{{question.question}}</a>
+          <a class="btn btn-link float-right" href="{% url 'mainapp:question' id=question.id %}"><i class="fas fa-link fa-sm"></i></a>
+          <button name="delete" id="{{question.id}}" class="btn btn-danger float-right">Supprimer</button>
+          <button name="edit" id="{{question.id}}" class="btn btn-success float-right mr-2">Modifier</button>
+          <button name="hide" id="{{question.id}}" class="btn btn-info float-right mr-2">{{ question.hidden|yesno:'Montrer,Cacher' }}</button>
+        </h5>
+      </div>
+
+      <div id="collapse-{{question.id}}" class="collapse" role="tabpanel" aria-labelledby="heading-{{question.id}}">
+        <div class="card-body">
+          {% if question.answer %}
+          <textarea rows="2" cols="100" class="form-control" id="question" style="resize:none">{{question.answer}}</textarea>
+          {% else %}
+          <textarea rows="2" cols="100" class="form-control" id="question" placeholder="Aucune réponse n'a été apporter pour le moment." style="resize:none"></textarea>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+<!-- /.container -->
+{% endblock content %}
+{% block script %}
+  <script src="{% static 'mainapp/js/questionmanager.js' %}"></script>
+{% endblock %}

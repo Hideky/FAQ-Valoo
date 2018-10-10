@@ -1,0 +1,23 @@
+{% extends 'mainapp/base.html' %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+
+<!-- Page Content -->
+<div class="container">
+
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">Question</h1>
+
+  <div>
+    <h4>{{question.question}}</h4>
+    {% if question.answer %}
+    <p>{{question.answer}}</p>
+    {% else %}
+    <p>Aucune réponse n'a été apporter pour le moment.</p>
+    {% endif %}
+  </div>
+
+
+</div>
+<!-- /.container -->
+{% endblock content %}

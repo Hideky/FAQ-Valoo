@@ -1,0 +1,16 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}Page inaccessible{{query}}{% endblock %}
+{% block content %}
+<section id="result" class="minh-75">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="section-heading">Afin d'accéder à cette page, il est necessaire de se connecter !</h2>
+        <hr class="my-4">
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

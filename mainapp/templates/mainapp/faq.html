@@ -1,0 +1,39 @@
+{% extends 'mainapp/base.html' %}
+{% block title %}FAQ{% endblock %}
+{% block content %}
+
+<!-- Page Content -->
+<div class="container">
+
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">FAQ</h1>
+
+  <div class="mb-4" id="accordion" role="tablist" aria-multiselectable="true">
+    {% if not questions %}
+    <p>Aucune question n'a été posé ou répondu pour le moment.</p>
+    {% endif %}
+    {% for question in questions %}
+    <div class="card">
+      <div class="card-header" role="tab" id="heading-{{question.id}}">
+        <h5 class="mb-0">
+          <a class="collapsed align-middle" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{question.id}}" aria-expanded="true" aria-controls="collapse-{{question.id}}">{{question.question}}</a>
+          <a class="btn btn-link float-right" href=""><i class="fas fa-link fa-sm"></i></a>
+        </h5>
+      </div>
+
+      <div id="collapse-{{question.id}}" class="collapse" role="tabpanel" aria-labelledby="heading-{{question.id}}">
+        <div class="card-body">
+          {% if question.answer %}
+          {{question.answer}}
+          {% else %}
+          Aucune réponse n'a été apporter pour le moment.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+<!-- /.container -->
+{% endblock content %}
