@@ -9,9 +9,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import validate_email
 from django.core.paginator import Paginator
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import Question
 from .serializers import QuestionSerializer
+from .permissions import IsPostOrIsAdminUser
 
 
 def index(request):
@@ -20,16 +21,25 @@ def index(request):
         questions = Question.objects.filter(answer__isnull=False, question__contains=request.GET['search'], hidden=False).order_by('date')
     else:
         questions = Question.objects.filter(answer__isnull=False, hidden=False).order_by('date')
-        
+
+    paginator = Paginator(questions, 10)
+    page = request.GET.get('page')
     context = {
-        'questions': questions
+        'questions': paginator.get_page(page)
     }
+
     return render(request, 'mainapp/faq.html', context)
 
 
 def question_form(request):
-    """Return Question Form View"""
+    """Return Question Form View - Send question using Rest Framework with Ajax"""
     return render(request, 'mainapp/questionform.html')
+
+
+def question(request, id):
+    """Return Question individual View"""
+    question = get_object_or_404(Question, id=id)
+    return render(request, 'mainapp/question.html', {'question':question})
 
 
 def question_manager(request):
@@ -41,35 +51,16 @@ def question_manager(request):
         return redirect(reverse('mainapp:index'), status=403)
 
     questions = Question.objects.filter().order_by('date')
+    paginator = Paginator(questions, 10)
+    page = request.GET.get('page')
     context = {
-        'questions': questions
+        'questions': paginator.get_page(page)
     }
     return render(request, 'mainapp/questionmanager.html', context)
 
 
-def question_receiver(request):
-    """Return status code about question creation from ask_your_question request"""
-    if request.method == 'POST' and all(x in request.POST for x in ['name', 'question']):
-        try:
-            Question.objects.create(username=request.POST['name'], question=request.POST['question'])
-        except ValidationError:
-            return render(request, 'mainapp/questionform.html', status=400)
-        except Exception:
-            return render(request, 'mainapp/questionform.html', status=400)
-
-        return render(request, 'mainapp/questionform.html', status=201)
-
-    return render(request, 'mainapp/questionform.html', status=405)
-
-
-def question(request, id):
-    """Return Question individual View"""
-    question = get_object_or_404(Question, id=id)
-    return render(request, 'mainapp/question.html', {'question':question})
-
-
 class QuestionViewSet(viewsets.ModelViewSet):
-    """Question view """
-    permission_classes = (permissions.IsAdminUser,)
+    """Question view used by Rest Framework"""
+    permission_classes = (IsPostOrIsAdminUser,)
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer

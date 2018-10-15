@@ -8,22 +8,22 @@ $(function() {
     submitSuccess: function($form, event) {
       event.preventDefault(); // prevent default submit behaviour
       // get values from FORM
-      var name = $("input#name").val();
+      var username = $("input#username").val();
       var question = $("textarea#question").val();
 
-      var firstName = name;
+      var firstName = username;
       if (firstName.indexOf(' ') >= 0) {
-        firstName = name.split(' ').slice(0, -1).join(' ');
+        firstName = username.split(' ').slice(0, -1).join(' ');
       }
 
       $this = $("#sendMessageButton");
       $this.prop("disabled", true); // Disable submit button until AJAX call is complete to prevent duplicate messages
       $.ajax({
-        url: "././questionreceiver",
+        url: "././api/questions/",
         type: "POST",
         data: {
           csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value,
-          name: name,
+          username: username,
           question: question
         },
         cache: false,

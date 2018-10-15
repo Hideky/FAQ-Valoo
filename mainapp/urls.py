@@ -15,7 +15,6 @@ router.register(r'questions', views.QuestionViewSet)
 urlpatterns = [
     path('', views.index, name='index'),
     path('questionform', views.question_form, name='questionform'),
-    path('questionreceiver', views.question_receiver, name='questionreceiver'),
     path('questionmanager', views.question_manager, name='questionmanager'),
     path('question/<int:id>', views.question, name='question'),
     path('login', auth_views.LoginView.as_view(template_name='mainapp/login.html'), name='login'),
